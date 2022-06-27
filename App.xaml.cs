@@ -4,6 +4,7 @@ using Serilog.Core;
 using Serilog.Events;
 using System;
 using System.IO;
+using System.Xml.Linq;
 using System.Windows;
 using System.Windows.Input;
 using WpfApp1.ViewModel;
@@ -19,7 +20,11 @@ namespace WpfApp1
 
         protected override void OnStartup(StartupEventArgs e)
         {
-
+            // below are hard coded serilog specific logging settings.
+            // modify to use specific logging package (i.e., serilog, nlog, log4net)
+            // modify to use different file name (not hardcoded)
+            // modify to rotate based on size or time duration
+            // modify to load settings based on an xml or json configuration
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.ControlledBy(lls)
                 .WriteTo.Console()
@@ -30,6 +35,13 @@ namespace WpfApp1
             // additionally, "GlobalAspects.cs" file must be added
             // this statement is typically done in the main or StartUp.cs 
             LoggingServices.DefaultBackend = new PostSharp.Patterns.Diagnostics.Backends.Serilog.SerilogLoggingBackend();
+
+            string configFileName = "PostSharpLoggingConfig.xml";
+            var configDocument = XDocument.Load(configFileName);
+
+            // additional logging configuration file to give more granular control to the logging settings
+            // modify to use "ConfigureFromXmlWithAutoReloadAsync" to adjust logging settings dynamically
+            LoggingConfigurationManager.ConfigureFromXml(LoggingServices.DefaultBackend, configDocument);
 
             base.OnStartup(e);
             MainWindow window = new MainWindow();
@@ -51,37 +63,6 @@ namespace WpfApp1
             string pathToLoggedFileName = Path.Combine(pathStartup, $"assets/logs/{logFileName}");
 
             return pathToLoggedFileName;
-        }
-
-        private ICommand mUpdate1;
-        public ICommand UpdateCommand1
-        {
-            get
-            {
-                if (mUpdate1 == null)
-                    mUpdate1 = new Updater();
-                return mUpdate1;
-            }
-            set
-            {
-                mUpdate1 = value;
-            }
-        }
-
-        public class Updater : ICommand
-        {
-
-            public bool CanExecute(object parameter)
-            {
-                return true;
-            }
-
-            public event EventHandler CanExecuteChanged;
-
-            public void Execute(object parameter)
-            {
-
-            }
         }
     }
 }
