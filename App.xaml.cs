@@ -55,7 +55,6 @@ namespace WpfApp1
             lls.MinimumLevel = LogEventLevel.Debug;
         }
 
-        //WpfApp1.App.UpdateCommand1
         public static string LoggingPath(string logFileName)
         {
             string pathStartup = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
