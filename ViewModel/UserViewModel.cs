@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using WpfApp1.Model;
 using System;
 
-namespace WpfApp1.ViewModel {
+namespace WpfApp1.ViewModel 
+{
     class UserViewModel
     {
         public bool TestButtonEnabled
